@@ -1,0 +1,28 @@
+# Ficheiros e pastas gerados pelo sistema operativo
+*.swp
+*~
+Thumbs.db
+.DS_Store
+
+# Ficheiros de configuração da IDE (Rider/Visual Studio)
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ficheiros de build e bibliotecas (o mais importante!)
+# Estas pastas são geradas sempre que você compila o projeto.
+[Bb]in/
+[Oo]bj/
+
+# Ficheiros de configuração de ambiente local
+# É uma boa prática não enviar as suas configurações de desenvolvimento
+# que podem conter senhas ou strings de conexão locais.
+appsettings.Development.json
+
+# Pasta de armazenamento local de imagens (se estiver a usar o LocalStorageService)
+storage/
+
+# Ficheiros de ferramentas locais do .NET
+.config/
