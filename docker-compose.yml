@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Serviço da API
+  api:
+    container_name: mottu-api
+    build:
+      context: ./MottuChallenge.API # Caminho para a pasta que contém o Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Expõe a porta 8080 do container para a porta 8080 da sua máquina
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=mottu_db;Username=postgres;Password=your_password
+    depends_on:
+      db:
+        condition: service_healthy # Espera o banco de dados estar pronto
+    networks:
+      - mottu-network
+
+  # Serviço do Banco de Dados
+  db:
+    image: postgres:15
+    container_name: mottu-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: mottu_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mottu-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# Define a rede que os containers usarão para se comunicar
+networks:
+  mottu-network:
+    driver: bridge
+
+# Define o volume para persistir os dados do banco de dados
+volumes:
+  postgres_data:
