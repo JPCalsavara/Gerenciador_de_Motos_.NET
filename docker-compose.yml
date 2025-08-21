@@ -13,9 +13,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=mottu_db;Username=postgres;Password=your_password
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672
     depends_on:
       db:
         condition: service_healthy # Espera o banco de dados estar pronto
+      rabbitmq: # Nova dependência
+        condition: service_healthy
     networks:
       - mottu-network
 
@@ -38,7 +41,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: mottu-rabbitmq
+    ports:
+      - "5672:5672"   # Porta para a aplicação
+      - "15672:15672" # Porta para a interface de gestão web
+    networks:
+      - mottu-network
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+      
 # Define a rede que os containers usarão para se comunicar
 networks:
   mottu-network:

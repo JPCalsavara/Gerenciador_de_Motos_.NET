@@ -1,10 +1,15 @@
+// using Amazon.Extensions.DependencyInjection;
+using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using MottuChallenge.API.Infrastructure.Persistence;
 using MottuChallenge.API.Repositories;
 using MottuChallenge.API.Services;
 using MottuChallenge.API.Services.UseCases.DeliveryPeople;
 using MottuChallenge.API.Services.UseCases.Motorcycles;
+using MottuChallenge.API.Services.UseCases.Rentals;
+// using MottuChallenge.API.Workers;
 using System.Reflection;
+using MottuChallenge.API.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +24,7 @@ builder.Services.AddControllers();
 // Repositórios
 builder.Services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();
 builder.Services.AddScoped<IDeliveryPersonRepository, DeliveryPersonRepository>();
+builder.Services.AddScoped<IRentalRepository, RentalRepository>();
 
 // UseCases - Motos
 builder.Services.AddScoped<CreateMotorcycleUseCase>();
@@ -29,10 +35,24 @@ builder.Services.AddScoped<DeleteMotorcycleUseCase>();
 
 // UseCases - Entregadores
 builder.Services.AddScoped<CreateDeliveryPersonUseCase>();
-builder.Services.AddScoped<UploadCnhUseCase>();
+// builder.Services.AddScoped<UploadCnhUseCase>(); // Registro desativado
 
-// Serviços Externos (Storage Local)
-builder.Services.AddSingleton<IStorageService, LocalStorageService>();
+// UseCases - Locação
+builder.Services.AddScoped<CreateRentalUseCase>();
+builder.Services.AddScoped<UpdateRentalReturnDateUseCase>();
+builder.Services.AddScoped<GetRentalByIdUseCase>();
+
+// --- SERVIÇOS EXTERNOS (DESATIVADOS TEMPORARIAMENTE) ---
+// builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+// builder.Services.AddAWSService<IAmazonS3>();
+// builder.Services.AddSingleton<IStorageService, S3StorageService>();
+// builder.Services.AddSingleton<IMessagingService, RabbitMqService>();
+
+// Serviço de Mensageria
+builder.Services.AddSingleton<IMessagingService, RabbitMqService>();
+
+// Worker/Consumidor
+builder.Services.AddHostedService<MotorcycleCreatedConsumer>();
 
 // --- CONFIGURAÇÃO DO SWAGGER ---
 builder.Services.AddEndpointsApiExplorer();
