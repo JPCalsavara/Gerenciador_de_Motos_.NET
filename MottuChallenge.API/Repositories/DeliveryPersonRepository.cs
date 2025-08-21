@@ -14,7 +14,7 @@ namespace MottuChallenge.API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<DeliveryPersonEntity?> GetByIdAsync(string identifier)
+        public async Task<DeliveryPersonEntity?> GetByIdAsync(Guid identifier)
         {
             return await _context.DeliveryPeopleEntities.FindAsync(identifier);
         }

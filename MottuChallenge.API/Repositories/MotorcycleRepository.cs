@@ -14,7 +14,7 @@ namespace MottuChallenge.API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<MotorcycleEntity?> GetByIdAsync(string identifier)
+        public async Task<MotorcycleEntity?> GetByIdAsync(Guid identifier)
         {
             return await _context.MotorcycleEntities.FindAsync(identifier);
         }
@@ -39,6 +39,16 @@ namespace MottuChallenge.API.Repositories
         {
             _context.MotorcycleEntities.Remove(motorcycle);
             await _context.SaveChangesAsync();
+        }
+        
+        public async Task<bool> IsRentedAsync(Guid identifier)
+        {
+            return await _context.RentalEntities.AnyAsync(r => r.MotorcycleId == identifier && r.IsActive);
+        }
+
+        public async Task<bool> HasRentalsAsync(Guid identifier)
+        {
+            return await _context.RentalEntities.AnyAsync(r => r.MotorcycleId == identifier);
         }
     }
 }
