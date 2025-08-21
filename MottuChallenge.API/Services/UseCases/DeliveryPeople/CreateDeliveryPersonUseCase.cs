@@ -9,28 +9,26 @@ namespace MottuChallenge.API.Services.UseCases.DeliveryPeople
         private readonly IDeliveryPersonRepository _deliveryPersonRepository;
         public CreateDeliveryPersonUseCase(IDeliveryPersonRepository deliveryPersonRepository) => _deliveryPersonRepository = deliveryPersonRepository;
 
-        public async Task<string> ExecuteAsync(CreateDeliveryPersonRequest request)
+        public async Task<Guid> ExecuteAsync(CreateDeliveryPersonRequestDTO requestDto)
         {
-            if (await _deliveryPersonRepository.GetByIdAsync(request.Identifier) != null)
-                throw new Exception("Identificador já cadastrado.");
-            if (await _deliveryPersonRepository.CnpjExistsAsync(request.Cnpj))
-                throw new DuplicateCnpjException(request.Cnpj);
-            if (await _deliveryPersonRepository.CnhNumberExistsAsync(request.CnhNumber))
-                throw new DuplicateCnhNumberException(request.CnhNumber);
-            if (!Enum.TryParse<CnhType>(request.CnhType, true, out var cnhType) || (cnhType != CnhType.A && cnhType != CnhType.B && cnhType != CnhType.AB))
-                throw new InvalidCnhTypeException(request.CnhType);
+            if (await _deliveryPersonRepository.CnpjExistsAsync(requestDto.Cnpj))
+                throw new DuplicateCnpjException(requestDto.Cnpj);
+            if (await _deliveryPersonRepository.CnhNumberExistsAsync(requestDto.CnhNumber))
+                throw new DuplicateCnhNumberException(requestDto.CnhNumber);
+            if (!Enum.TryParse<CnhType>(requestDto.CnhType, true, out var cnhType) || (cnhType != CnhType.A && cnhType != CnhType.B && cnhType != CnhType.AB))
+                throw new InvalidCnhTypeException(requestDto.CnhType);
 
             var deliveryPerson = new DeliveryPersonEntity
             {
-                Identifier = request.Identifier,
-                Name = request.Name,
-                Cnpj = request.Cnpj,
-                BirthDate = request.BirthDate.ToUniversalTime(),
-                CnhNumber = request.CnhNumber,
+                Name = requestDto.Name,
+                Cnpj = requestDto.Cnpj,
+                BirthDate = requestDto.BirthDate.ToUniversalTime(),
+                CnhNumber = requestDto.CnhNumber,
                 CnhType = cnhType
             };
             await _deliveryPersonRepository.AddAsync(deliveryPerson);
-            return deliveryPerson.Identifier;
+
+            return deliveryPerson.Id;
         }
     }
 }

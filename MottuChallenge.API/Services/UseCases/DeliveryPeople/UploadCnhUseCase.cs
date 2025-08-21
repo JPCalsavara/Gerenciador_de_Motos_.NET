@@ -13,7 +13,7 @@ namespace MottuChallenge.API.Services.UseCases.DeliveryPeople
             _storageService = storageService;
         }
 
-        public async Task ExecuteAsync(string identifier, IFormFile file)
+        public async Task ExecuteAsync(Guid identifier, IFormFile file)
         {
             var deliveryPerson = await _deliveryPersonRepository.GetByIdAsync(identifier) ?? throw new DeliveryPersonNotFoundException();
             var allowedExtensions = new[] { ".png", ".bmp" };

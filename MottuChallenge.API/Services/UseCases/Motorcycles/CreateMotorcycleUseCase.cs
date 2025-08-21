@@ -9,23 +9,21 @@ namespace MottuChallenge.API.Services.UseCases.Motorcycles
         private readonly IMotorcycleRepository _motorcycleRepository;
         public CreateMotorcycleUseCase(IMotorcycleRepository repo) => _motorcycleRepository = repo;
 
-        public async Task<string> ExecuteAsync(CreateMotorcycleRequest request)
+        public async Task<Guid> ExecuteAsync(CreateMotorcycleRequestDTO requestDto)
         {
-            if (await _motorcycleRepository.GetByIdAsync(request.Identifier) != null)
-                throw new Exception("Identificador já cadastrado.");
-            if (await _motorcycleRepository.GetByLicensePlateAsync(request.LicensePlate) != null)
-                throw new DuplicateLicensePlateException(request.LicensePlate);
+            if (await _motorcycleRepository.GetByLicensePlateAsync(requestDto.LicensePlate) != null)
+                throw new DuplicateLicensePlateException(requestDto.LicensePlate);
 
             var motorcycle = new MotorcycleEntity
             {
-                Identifier = request.Identifier,
-                Year = request.Year,
-                Model = request.Model,
-                LicensePlate = request.LicensePlate
+                Year = requestDto.Year,
+                Model = requestDto.Model,
+                LicensePlate = requestDto.LicensePlate
             };
             await _motorcycleRepository.AddAsync(motorcycle);
             // Adicioanar mensageria
-            return motorcycle.Identifier;
+            
+            return motorcycle.Id;
         }
     }
 }

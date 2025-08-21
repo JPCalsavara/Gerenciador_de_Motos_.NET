@@ -2,10 +2,8 @@ using System.Text.Json.Serialization;
 
 namespace MottuChallenge.API.DTOs
 {
-    public class CreateMotorcycleRequest
+    public class CreateMotorcycleRequestDTO
     {
-        [JsonPropertyName("identificador")]
-        public string Identifier { get; set; }
         [JsonPropertyName("ano")]
         public int Year { get; set; }
         [JsonPropertyName("modelo")]

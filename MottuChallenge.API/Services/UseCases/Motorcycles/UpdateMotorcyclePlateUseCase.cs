@@ -8,14 +8,14 @@ namespace MottuChallenge.API.Services.UseCases.Motorcycles
         private readonly IMotorcycleRepository _repo;
         public UpdateMotorcyclePlateUseCase(IMotorcycleRepository repo) => _repo = repo;
 
-        public async Task ExecuteAsync(string identifier, UpdateMotorcyclePlateRequest request)
+        public async Task ExecuteAsync(Guid id, UpdateMotorcyclePlateRequestDTO requestDto)
         {
-            var motorcycle = await _repo.GetByIdAsync(identifier) ?? throw new MotorcycleNotFoundException();
-            var existing = await _repo.GetByLicensePlateAsync(request.LicensePlate);
-            if (existing != null && existing.Identifier != identifier)
-                throw new DuplicateLicensePlateException(request.LicensePlate);
+            var motorcycle = await _repo.GetByIdAsync(id) ?? throw new MotorcycleNotFoundException();
+            var existing = await _repo.GetByLicensePlateAsync(requestDto.LicensePlate);
+            if (existing != null && existing.Id != id)
+                throw new DuplicateLicensePlateException(requestDto.LicensePlate);
             
-            motorcycle.LicensePlate = request.LicensePlate;
+            motorcycle.LicensePlate = requestDto.LicensePlate;
             await _repo.UpdateAsync(motorcycle);
         }
     }

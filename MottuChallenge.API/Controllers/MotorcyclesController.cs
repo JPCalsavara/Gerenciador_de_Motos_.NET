@@ -24,12 +24,12 @@ namespace MottuChallenge.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateMotorcycleRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateMotorcycleRequestDTO requestDto)
         {
             try
             {
-                var id = await _create.ExecuteAsync(request);
-                return CreatedAtAction(nameof(GetById), new { identifier = id }, new { id });
+                var id = await _create.ExecuteAsync(requestDto);
+                return CreatedAtAction(nameof(GetById), new { id = id }, new { id });
             }
             catch (Exception ex) { return Conflict(new { message = ex.Message }); }
         }
@@ -41,32 +41,32 @@ namespace MottuChallenge.API.Controllers
             return Ok(motorcycles);
         }
 
-        [HttpGet("{identifier}")]
-        public async Task<IActionResult> GetById(string identifier)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var motorcycle = await _getById.ExecuteAsync(identifier);
+            var motorcycle = await _getById.ExecuteAsync(id);
             if (motorcycle == null) return NotFound();
             return Ok(motorcycle);
         }
 
-        [HttpPut("{identifier}/placa")]
-        public async Task<IActionResult> UpdatePlate(string identifier, [FromBody] UpdateMotorcyclePlateRequest request)
+        [HttpPut("{id}/placa")]
+        public async Task<IActionResult> UpdatePlate(Guid id, [FromBody] UpdateMotorcyclePlateRequestDTO requestDto)
         {
             try
             {
-                await _update.ExecuteAsync(identifier, request);
+                await _update.ExecuteAsync(id, requestDto);
                 return NoContent();
             }
             catch (MotorcycleNotFoundException ex) { return NotFound(new { message = ex.Message }); }
             catch (Exception ex) { return Conflict(new { message = ex.Message }); }
         }
 
-        [HttpDelete("{identifier}")]
-        public async Task<IActionResult> Delete(string identifier)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                await _delete.ExecuteAsync(identifier);
+                await _delete.ExecuteAsync(id);
                 return NoContent();
             }
             catch (MotorcycleNotFoundException ex) { return NotFound(new { message = ex.Message }); }

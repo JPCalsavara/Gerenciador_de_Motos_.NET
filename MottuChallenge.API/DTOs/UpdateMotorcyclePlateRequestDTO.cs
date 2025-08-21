@@ -5,7 +5,7 @@ namespace MottuChallenge.API.DTOs
     /// <summary>
     /// DTO para a requisição de atualização da placa de uma moto.
     /// </summary>
-    public class UpdateMotorcyclePlateRequest
+    public class UpdateMotorcyclePlateRequestDTO
     {
         [JsonPropertyName("placa")]
         public string LicensePlate { get; set; }

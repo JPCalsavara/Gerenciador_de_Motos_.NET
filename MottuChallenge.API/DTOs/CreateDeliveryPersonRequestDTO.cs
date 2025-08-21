@@ -2,11 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace MottuChallenge.API.DTOs
 {
-    public class CreateDeliveryPersonRequest
+    public class CreateDeliveryPersonRequestDTO
     {
-        [JsonPropertyName("identificador")]
-        public string Identifier { get; set; }
-
+       
         [JsonPropertyName("nome")]
         public string Name { get; set; }
 

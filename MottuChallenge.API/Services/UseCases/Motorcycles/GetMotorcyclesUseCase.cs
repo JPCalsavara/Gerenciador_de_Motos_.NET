@@ -7,10 +7,10 @@ namespace MottuChallenge.API.Services.UseCases.Motorcycles
         private readonly IMotorcycleRepository _repo;
         public GetMotorcyclesUseCase(IMotorcycleRepository repo) => _repo = repo;
 
-        public async Task<IEnumerable<MotorcycleResponse>> ExecuteAsync()
+        public async Task<IEnumerable<MotorcycleResponseDTO>> ExecuteAsync()
         {
             var motorcycles = await _repo.GetAllAsync();
-            return motorcycles.Select(m => new MotorcycleResponse { Identifier = m.Identifier, Year = m.Year, Model = m.Model, LicensePlate = m.LicensePlate });
+            return motorcycles.Select(m => new MotorcycleResponseDTO { Id = m.Id, Year = m.Year, Model = m.Model, LicensePlate = m.LicensePlate });
         }
     }
 }

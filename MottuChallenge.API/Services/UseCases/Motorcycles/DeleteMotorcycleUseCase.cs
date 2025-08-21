@@ -7,9 +7,9 @@ namespace MottuChallenge.API.Services.UseCases.Motorcycles
         private readonly IMotorcycleRepository _repo;
         public DeleteMotorcycleUseCase(IMotorcycleRepository repo) => _repo = repo;
 
-        public async Task ExecuteAsync(string identifier)
+        public async Task ExecuteAsync(Guid id)
         {
-            var motorcycle = await _repo.GetByIdAsync(identifier) ?? throw new MotorcycleNotFoundException();
+            var motorcycle = await _repo.GetByIdAsync(id) ?? throw new MotorcycleNotFoundException();
             await _repo.DeleteAsync(motorcycle);
         }
     }
