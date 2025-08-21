@@ -11,6 +11,8 @@ namespace MottuChallenge.API.Infrastructure.Persistence
         public DbSet<DeliveryPersonEntity> DeliveryPeopleEntities { get; set; }
         
         public DbSet<RentalEntity> RentalEntities { get; set; }
+        
+        public DbSet<NotificationEntity> NotificationEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,6 +20,8 @@ namespace MottuChallenge.API.Infrastructure.Persistence
             modelBuilder.Entity<MotorcycleEntity>(entity =>
             {
                 entity.HasKey(e => e.Id); // Chave primária atualizada
+                entity.ToTable(e => e.HasCheckConstraint("CK_Motorcycle_Year", "\"Year\" > 2019"));
+
                 entity.HasIndex(e => e.LicensePlate).IsUnique();
                 entity.Property(e => e.Id).HasMaxLength(50);
                 entity.Property(e => e.Model).HasMaxLength(100);
@@ -53,6 +57,11 @@ namespace MottuChallenge.API.Infrastructure.Persistence
                 entity.HasOne(r => r.Motorcycle)
                     .WithMany() // Uma moto pode ter muitas locações
                     .HasForeignKey(r => r.MotorcycleId);
+            });
+            
+            modelBuilder.Entity<NotificationEntity>(entity =>
+            {
+                entity.HasKey(e => e.Id);
             });
         }
     }
