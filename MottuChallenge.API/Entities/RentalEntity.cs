@@ -6,18 +6,18 @@ namespace MottuChallenge.API.Entities
     public class RentalEntity
     {
         [Key]
-        public String Identifier { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public string DeliveryPersonIdentifier { get; set; }
+        public Guid DeliveryPersonId { get; set; }
         
-        [ForeignKey("DeliveryPersonIdentifier")]
+        [ForeignKey("DeliveryPersonId")]
         public DeliveryPersonEntity DeliveryPerson { get; set; }
 
         [Required]
-        public string MotorcycleIdentifier { get; set; }
+        public Guid MotorcycleId { get; set; }
 
-        [ForeignKey("MotorcycleIdentifier")]
+        [ForeignKey("MotorcycleId")]
         public MotorcycleEntity Motorcycle { get; set; }
 
         public DateTime StartDate { get; set; }
