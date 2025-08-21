@@ -3,10 +3,9 @@ using System.Text.Json.Serialization;
 namespace MottuChallenge.API.DTOs
 {
     public class CreateRentalRequestDTO
-    {   
-       
-        [JsonPropertyName("entregador_id")]
-        public Guid DeliveryPersonId { get; set; }
+    {
+
+        [JsonPropertyName("entregador_id")] public Guid DeliveryPersonId { get; set; } 
 
         [JsonPropertyName("moto_id")]
         public Guid MotorcycleId { get; set; }

@@ -7,8 +7,8 @@ namespace MottuChallenge.API.DTOs
         [JsonPropertyName("ano")]
         public int Year { get; set; }
         [JsonPropertyName("modelo")]
-        public string Model { get; set; }
+        public string Model { get; set; } = string.Empty;
         [JsonPropertyName("placa")]
-        public string LicensePlate { get; set; }
+        public string LicensePlate { get; set; } = string.Empty;
     }
 }
