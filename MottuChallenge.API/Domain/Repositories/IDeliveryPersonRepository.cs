@@ -5,6 +5,7 @@ namespace MottuChallenge.API.Repositories
     {
         Task AddAsync(DeliveryPersonEntity deliveryPerson);
         Task<DeliveryPersonEntity?> GetByIdAsync(Guid identifier);
+        Task<IEnumerable<DeliveryPersonEntity>> GetAllAsync(); 
         Task<bool> CnpjExistsAsync(string cnpj);
         Task<bool> CnhNumberExistsAsync(string cnhNumber);
         Task UpdateAsync(DeliveryPersonEntity deliveryPerson);

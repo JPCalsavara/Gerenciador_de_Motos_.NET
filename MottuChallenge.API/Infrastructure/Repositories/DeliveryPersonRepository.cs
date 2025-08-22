@@ -18,7 +18,12 @@ namespace MottuChallenge.API.Repositories
         {
             return await _context.DeliveryPeopleEntities.FindAsync(identifier);
         }
-
+        
+        public async Task<IEnumerable<DeliveryPersonEntity>> GetAllAsync()
+        {
+            return await _context.DeliveryPeopleEntities.ToListAsync();
+        }
+        
         public async Task<bool> CnpjExistsAsync(string cnpj)
         {
             return await _context.DeliveryPeopleEntities.AnyAsync(d => d.Cnpj == cnpj);
