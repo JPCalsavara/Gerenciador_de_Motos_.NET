@@ -2,7 +2,8 @@ using MottuChallenge.API.DTOs;
 using MottuChallenge.API.Entities;
 using MottuChallenge.API.Exceptions;
 using MottuChallenge.API.Repositories;
-namespace MottuChallenge.API.Services.UseCases.DeliveryPeople
+
+namespace MottuChallenge.API.Application.UseCases.DeliveryPeople
 {
     public class CreateDeliveryPersonUseCase
     {
