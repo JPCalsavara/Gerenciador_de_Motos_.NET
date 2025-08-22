@@ -14,28 +14,26 @@ namespace MottuChallenge.API.Services
             _configuration = configuration;
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file, string deliveryPersonId)
+        public async Task<string> UploadFileAsync(byte[] fileBytes, string identifier, string contentType, string fileExtension)
         {
             var bucketName = _configuration["AWS:BucketName"];
-            var fileExtension = Path.GetExtension(file.FileName);
-            var key = $"cnh-images/{deliveryPersonId}_{Guid.NewGuid()}{fileExtension}";
+            var region = _configuration["AWS:Region"];
+            var key = $"cnh-images/{identifier}_{Guid.NewGuid()}{fileExtension}";
 
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
+            using var memoryStream = new MemoryStream(fileBytes);
 
             var request = new PutObjectRequest
             {
                 BucketName = bucketName,
                 Key = key,
                 InputStream = memoryStream,
-                ContentType = file.ContentType,
-                CannedACL = S3CannedACL.PublicRead // Torna o arquivo publicamente acessível
+                ContentType = contentType
+                // A linha CannedACL foi removida para ser compatível com as novas políticas de bucket
             };
 
             await _s3Client.PutObjectAsync(request);
 
-            // Retorna a URL pública do arquivo no S3
-            return $"https://{bucketName}.s3.amazonaws.com/{key}";
+            return $"https://{bucketName}.s3.{region}.amazonaws.com/{key}";
         }
     }
 }

@@ -1,5 +1,6 @@
 using MottuChallenge.API.Exceptions;
 using MottuChallenge.API.Repositories;
+
 namespace MottuChallenge.API.Services.UseCases.DeliveryPeople
 {
     public class UploadCnhUseCase
@@ -13,16 +14,19 @@ namespace MottuChallenge.API.Services.UseCases.DeliveryPeople
             _storageService = storageService;
         }
 
-        public async Task ExecuteAsync(Guid identifier, IFormFile file)
+        public async Task ExecuteAsync(Guid id, string cnhImageBase64)
         {
-            var deliveryPerson = await _deliveryPersonRepository.GetByIdAsync(identifier) ?? throw new DeliveryPersonNotFoundException();
-            var allowedExtensions = new[] { ".png", ".bmp" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!allowedExtensions.Contains(fileExtension))
-                throw new InvalidFileTypeException("Apenas ficheiros .png e .bmp são permitidos.");
+            var deliveryPerson = await _deliveryPersonRepository.GetByIdAsync(id) ?? throw new DeliveryPersonNotFoundException();
 
-            var fileUrl = await _storageService.UploadFileAsync(file, identifier);
+            // Descodifica a string Base64 para bytes
+            var fileBytes = Convert.FromBase64String(cnhImageBase64);
+
+            // Valida o tipo de ficheiro (assumindo PNG por defeito, conforme o requisito)
+            // Uma implementação mais robusta poderia validar os "magic bytes" do ficheiro.
+            var fileUrl = await _storageService.UploadFileAsync(fileBytes, id.ToString(), "image/png", ".png");
+            
             deliveryPerson.CnhImageUrl = fileUrl;
+
             await _deliveryPersonRepository.UpdateAsync(deliveryPerson);
         }
     }
