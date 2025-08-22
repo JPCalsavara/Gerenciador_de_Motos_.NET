@@ -22,7 +22,11 @@ namespace MottuChallenge.API.Controllers
             _update = update;
             _delete = delete;
         }
-
+        
+        
+        /// <summary>
+        /// Cria uma nova moto
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateMotorcycleRequestDTO requestDto)
         {
@@ -33,14 +37,20 @@ namespace MottuChallenge.API.Controllers
             }
             catch (Exception ex) { return Conflict(new { message = ex.Message }); }
         }
-
+        
+        /// <summary>
+        /// Consultar todas as motos
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var motorcycles = await _getAll.ExecuteAsync();
             return Ok(motorcycles);
         }
-
+        
+        /// <summary>
+        /// Consultar a moto por id
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -48,7 +58,10 @@ namespace MottuChallenge.API.Controllers
             if (motorcycle == null) return NotFound();
             return Ok(motorcycle);
         }
-
+        
+        /// <summary>
+        /// Modificar a placa por id
+        /// </summary>
         [HttpPut("{id}/placa")]
         public async Task<IActionResult> UpdatePlate(Guid id, [FromBody] UpdateMotorcyclePlateRequestDTO requestDto)
         {
@@ -60,7 +73,10 @@ namespace MottuChallenge.API.Controllers
             catch (MotorcycleNotFoundException ex) { return NotFound(new { message = ex.Message }); }
             catch (Exception ex) { return Conflict(new { message = ex.Message }); }
         }
-
+        
+        /// <summary>
+        /// Deletar moto por id
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
