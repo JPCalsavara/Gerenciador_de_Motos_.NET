@@ -50,5 +50,13 @@ namespace MottuChallenge.API.Repositories
         {
             return await _context.RentalEntities.AnyAsync(r => r.MotorcycleId == identifier);
         }
+        
+        public async Task<MotorcycleEntity?> GetAvailableAsync()
+        {
+            // Encontra a primeira moto que não tenha um ID correspondente
+            // na tabela de locações ativas.
+            return await _context.MotorcycleEntities
+                .FirstOrDefaultAsync(m => !_context.RentalEntities.Any(r => r.MotorcycleId == m.Id && r.IsActive));
+        }
     }
 }

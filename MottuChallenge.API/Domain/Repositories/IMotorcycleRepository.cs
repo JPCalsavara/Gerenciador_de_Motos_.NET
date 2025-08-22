@@ -11,5 +11,7 @@ namespace MottuChallenge.API.Repositories
         Task DeleteAsync(MotorcycleEntity motorcycle);
         Task<bool> IsRentedAsync(Guid Id);
         Task<bool> HasRentalsAsync(Guid Id);
+        
+        Task<MotorcycleEntity?> GetAvailableAsync();
     }
 }
